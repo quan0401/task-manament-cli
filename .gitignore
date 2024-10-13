@@ -1,0 +1,10 @@
+node_modules/
+build/
+coverage/
+
+*.swp
+
+.env
+
+.DS_Store
+ignore-folder
