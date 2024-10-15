@@ -3,8 +3,8 @@ import taskListTest from './test/TaskList.test';
 import storageTest from './test/Storage.test';
 
 // taskTest();
-taskListTest();
-// storageTest();
+// taskListTest();
+storageTest();
 
 // class CustomArray extends Array {
 // 	constructor(array: any) {

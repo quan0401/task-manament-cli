@@ -138,7 +138,7 @@ export class TaskList extends Array<Task> {
 	}
 
 	// TODO FIXME:
-	deleteTask(taskId: number[]) {
+	deleteTask(taskId: number[]): Task[] {
 		let removeTasks: Task[] = [];
 
 		//////////
@@ -168,6 +168,7 @@ export class TaskList extends Array<Task> {
 		this.traverseGivenTasks(removeTasks, ({ task }) => {
 			this.remove(task!);
 		});
+		return removeTasks;
 	}
 
 	moveTask(tasksID: number[], subTaskOf: number) {
@@ -178,6 +179,7 @@ export class TaskList extends Array<Task> {
 				this.addTask(task, subTaskOf);
 			})
 		);
+		return tasksID;
 	}
 
 	/**
@@ -224,4 +226,71 @@ export class TaskList extends Array<Task> {
 
 		iter(tasks);
 	}
+
+	/**
+	 * use recursion to return all tasks matching value
+	 */
+	search = <K extends keyof Task>(taskAttribute: K, value: any) => {
+		const tasks: Task[] = [];
+
+		this.forEach((task) => {
+			const within = task.straightTask();
+
+			within.forEach((withinTask) => {
+				if (withinTask[taskAttribute] === value) tasks.push(withinTask);
+			});
+		});
+		return tasks;
+	};
+
+	/**
+	 * use recursion to count everything tasks and subtasks
+	 */
+
+	countTaskAndSub = () => {
+		let count = 0;
+
+		this.forEach(function iter(task) {
+			count++;
+			Array.isArray(task.subtasks) && task.subtasks.forEach(iter);
+		});
+
+		return count;
+	};
+
+	// todo 57% ❯ wip 29% ❯ done 14% ❯
+	getStatistics = (meta: Meta) => {
+		let toReturn = '';
+		const statesCount: Record<string, number> = {};
+		meta.states.forEach((state) => {
+			statesCount[state.name] = 0;
+		});
+
+		this.forEach(function iter(task: Task) {
+			statesCount[task.state!]++;
+			Array.isArray(task.subtasks) && task.subtasks.forEach(iter);
+		});
+
+		let total = Object.values(statesCount).reduce((prev, current) => prev + current, 0);
+		meta.states.forEach((state) => {
+			let percent = (statesCount[state.name] / total) * 100;
+			toReturn += chalk.hex(state.hexColor)(`${state.name} ${percent.toFixed(0)}% ❯ `);
+		});
+		return toReturn;
+	};
+
+	group = (groupBy: GroupByType, meta: Meta) => {
+		let sortFunction = (a: Task, b: Task) => 0;
+
+		if (groupBy === 'state') {
+			const stateNames = meta.states.map((state) => state.name);
+
+			sortFunction = (a: Task, b: Task) => {
+				if (a.state === b.state) return 0;
+
+				return stateNames.indexOf(a.state!) < stateNames.indexOf(b.state!) ? -1 : 1;
+			};
+		}
+		this.sort(sortFunction);
+	};
 }

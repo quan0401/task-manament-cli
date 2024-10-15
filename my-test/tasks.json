@@ -1,69 +1,69 @@
 {
-	"meta": {
-		"states": [
-			{
-				"name": "todo",
-				"hexColor": "#ff8f00",
-				"icon": "📋"
-			},
-			{
-				"name": "wip",
-				"hexColor": "#ab47bc",
-				"icon": "🔄"
-			},
-			{
-				"name": "done",
-				"hexColor": "#66bb6a",
-				"icon": "✅"
-			}
-		]
-	},
-	"datas": [
-		{
-			"name": "a new task",
-			"state": "done",
-			"description": "with a description",
-			"id": 0,
-			"timestamp": "13/10/2024",
-			"subtasks": [
-				{
-					"name": "sub1",
-					"state": "todo",
-					"description": "sub1 task",
-					"id": 4,
-					"timestamp": "14/10/2024",
-					"subtasks": [
-						{
-							"name": "subsub1",
-							"state": "todo",
-							"description": "subsub1 task",
-							"id": 6,
-							"timestamp": "14/10/2024"
-						}
-					]
-				}
-			]
-		},
-		{
-			"name": "task 2",
-			"state": "wip",
-			"description": "with a description 1234",
-			"id": 2,
-			"timestamp": "13/10/2024"
-		},
-		{
-			"name": "task 3",
-			"state": "wip",
-			"description": "with a description3",
-			"id": 3,
-			"timestamp": "13/10/2024"
-		},
-		{
-			"name": "test storage add task",
-			"state": "wip",
-			"description": "test storage add task",
-			"timestamp": "15/10/2024",
-			"id": 1
-		}
-	]
+    "meta": {
+        "states": [
+            {
+                "name": "todo",
+                "hexColor": "#ff8f00",
+                "icon": "📋"
+            },
+            {
+                "name": "wip",
+                "hexColor": "#ab47bc",
+                "icon": "🔄"
+            },
+            {
+                "name": "done",
+                "hexColor": "#66bb6a",
+                "icon": "✅"
+            }
+        ]
+    },
+    "datas": [
+        {
+            "name": "a new task",
+            "state": "done",
+            "description": "with a description",
+            "id": 0,
+            "timestamp": "13/10/2024",
+            "subtasks": [
+                {
+                    "name": "sub1",
+                    "state": "todo",
+                    "description": "sub1 task",
+                    "id": 4,
+                    "timestamp": "14/10/2024",
+                    "subtasks": [
+                        {
+                            "name": "subsub1",
+                            "state": "todo",
+                            "description": "subsub1 task",
+                            "id": 6,
+                            "timestamp": "14/10/2024"
+                        },
+                        {
+                            "name": "task 3",
+                            "state": "wip",
+                            "description": "with a description3",
+                            "id": 3,
+                            "timestamp": "15/10/2024"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "task 2",
+            "state": "wip",
+            "description": "with a description 1234",
+            "id": 2,
+            "timestamp": "13/10/2024"
+        },
+        {
+            "name": "test storage add task",
+            "state": "wip",
+            "description": "test storage add task",
+            "timestamp": "15/10/2024",
+            "id": 1
+        }
+    ]
 }

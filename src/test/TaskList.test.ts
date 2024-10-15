@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { DEFAULT_STORAGE_DATAS } from '~/core/Storage';
 import { TaskList } from '~/core/TaskList';
 
 // Sample task data
@@ -61,12 +62,4 @@ const testData = [
 ];
 export default () => {
 	const taskList = new TaskList(testData); // console.log(taskList[0].straightTask());
-
-	taskList.moveTask([3], 0);
-
-	// console.log(
-	// 	taskList.forEach((task) => {
-	// 		console.log(task.straightTask());
-	// 	})
-	// );
 };

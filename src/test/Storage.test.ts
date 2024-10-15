@@ -11,5 +11,5 @@ const task = {
 
 export default () => {
 	const storage = new Storage('my-test/tasks.json');
-	// storage.addTask(new Task(task));
+	storage.moveTask([3], 4);
 };
