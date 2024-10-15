@@ -84,6 +84,18 @@ export class Storage {
 		return id;
 	};
 
+	editTask = (taskId: number[], newAttributres: ITask, isRecursive?: boolean) => {
+		const id = this.tasks.editTask(taskId, newAttributres, isRecursive);
+		this.save();
+		return id;
+	};
+
+	incrementTask = (tasksID: number[], meta: Meta, isRecursive?: boolean) => {
+		const id = this.tasks.incrementTask(tasksID, this.meta, isRecursive);
+		this.save();
+		return id;
+	};
+
 	//////////////////////////////////////////////////
 
 	save = () => System.writeJSONFile(this.relativePath, { meta: this.meta, datas: this.tasks });

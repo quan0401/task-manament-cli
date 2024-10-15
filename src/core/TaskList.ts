@@ -16,7 +16,7 @@ export type Order = (typeof handleOrder)[number];
 
 interface RetrieveTaskCallback {
 	task: Task;
-	taskIndex: number;
+	taskIndex?: number;
 	parentTask: Task | undefined;
 }
 
@@ -137,53 +137,91 @@ export class TaskList extends Array<Task> {
 		});
 	}
 
-	// TODO FIXME: finish this later
+	// TODO FIXME:
 	deleteTask(taskId: number[]) {
+		let removeTasks: Task[] = [];
+
+		//////////
+
 		taskId.forEach((id) => {
 			let wasTaskFound = false;
 			this.retrieveTask(id, ({ task, parentTask }) => {
 				if (task !== undefined && task.id === id) {
 					wasTaskFound = true;
 					if (parentTask !== undefined) {
-						const numSubTasksOfParent = parentTask.subtasks!.length;
-						// if parent has one subtask
-						if (numSubTasksOfParent === 1) {
-							delete parentTask.subtasks;
-						} else {
-							this.remove(task);
-						}
-					}
+						const taskIndex = parentTask.subtasks!.findIndex((task_) => task_.id === id);
+						const removedTask = parentTask.subtasks!.splice(taskIndex, 1);
+						removeTasks.push(...removedTask);
+
+						// remove subtasks field if there is not subtask left
+						if (parentTask.subtasks!.length === 0) delete parentTask.subtasks;
+					} else removeTasks.push(task);
 				}
 			});
 			if (!wasTaskFound) throw new TaskNotFoundError(id);
 		});
+
+		//////////
+
+		// remove the task and their subtasks if exists
+		// rm from the bottom up mean remove all subtask then parentTask
+		this.traverseGivenTasks(removeTasks, ({ task }) => {
+			this.remove(task!);
+		});
+	}
+
+	moveTask(tasksID: number[], subTaskOf: number) {
+		tasksID.forEach((id) =>
+			this.retrieveTask(id, ({ task }) => {
+				this.deleteTask([id]);
+
+				this.addTask(task, subTaskOf);
+			})
+		);
 	}
 
 	/**
 	 *
 	 * @throws {TaskNotFoundError}
 	 */
+	// Already FIXME: the second subtask, will return undefined parentTask (if the first subtask)
 	retrieveTask(taskID: number, callback: (cbParams: RetrieveTaskCallback) => void) {
 		let wasTaskFound = false;
-		let parentTask: Task | undefined = undefined;
 
-		const iter = (task: Task, taskIndex: number) => {
-			if (task.id === taskID) {
-				wasTaskFound = true;
+		const iter = (tasks: Task[], parentTask: Task | undefined) => {
+			for (let i = 0; i < tasks.length; i++) {
+				const currentTask = tasks[i];
 
-				return callback({ task, taskIndex, parentTask });
-			} else {
-				if (Array.isArray(task.subtasks)) {
-					parentTask = task;
+				if (currentTask.id === taskID) {
+					wasTaskFound = true;
+					return callback({ task: currentTask, parentTask });
+				}
 
-					task.subtasks.forEach(iter);
-				} else parentTask = undefined;
+				if (Array.isArray(currentTask.subtasks)) {
+					// Pass the current task as the parent to the next level of subtasks
+					iter(currentTask.subtasks, currentTask);
+				}
 			}
 		};
 
-		// @see: https://stackoverflow.com/questions/43612046/how-to-update-value-of-nested-array-of-objects
-		this.forEach(iter);
+		iter(this, undefined);
 
 		if (!wasTaskFound) throw new TaskNotFoundError(taskID);
+	}
+
+	traverseGivenTasks(tasks: Task[], callback: (cbParams: Partial<RetrieveTaskCallback>) => void) {
+		const iter = (tasks: Task[]) => {
+			for (let i = 0; i < tasks.length; i++) {
+				const currentTask = tasks[i];
+
+				if (Array.isArray(currentTask.subtasks)) {
+					// Pass the current task as the parent to the next level of subtasks
+					iter(currentTask.subtasks);
+				}
+				callback({ task: currentTask });
+			}
+		};
+
+		iter(tasks);
 	}
 }

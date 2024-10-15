@@ -61,9 +61,8 @@ const testData = [
 ];
 export default () => {
 	const taskList = new TaskList(testData); // console.log(taskList[0].straightTask());
-	taskList.deleteTask([1]);
 
-	// taskList.deleteTask([5, 4, 6]);
+	taskList.moveTask([3], 0);
 
 	// console.log(
 	// 	taskList.forEach((task) => {
