@@ -1,16 +1,26 @@
 {
 	"name": "cli-task-manager",
 	"version": "1.0.0",
-	"main": "webpack.config.js",
+	"main": "Main.ts",
 	"devDependencies": {
 		"@types/node": "^22.7.5",
+		"nodemon": "^3.1.7",
+		"ts-node": "^10.9.2",
+		"tsconfig-paths": "^4.2.0",
 		"tslint": "^5.20.1",
 		"typescript": "^5.6.3"
 	},
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"start": "pm2 start ./build/src/app.js -i 5 --attach --watch",
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"test:task": "ts-node src/Main.ts",
+		"dev": "nodemon -r tsconfig-paths/register src/Main.ts"
 	},
 	"author": "",
 	"license": "ISC",
-	"description": ""
+	"description": "",
+	"dependencies": {
+		"chalk": "^4.1.2",
+		"moment": "^2.30.1"
+	}
 }
